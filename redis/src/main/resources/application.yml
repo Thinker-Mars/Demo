@@ -1,0 +1,3 @@
+mybatis:
+    typeAliasesPackage: com.cone.redis.entity
+    mapperLocations: classpath:mapper/*.xml

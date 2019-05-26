@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cone.redis.dao.ProductDao">
+     <!-- 查询图书类别 -->
+     <select id="searchProduct" resultType="com.cone.redis.entity.Product">
+             
+          select * from product
+
+     </select>
+     
+		 
+</mapper>
