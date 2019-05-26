@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cone.sunny.dao.BookMetaDao">
+     <!-- 查询图书类别 -->
+     <select id="searchBookMeta" resultType="com.cone.sunny.pojo.BookMeta">
+          SELECT
+	        product.productid,
+	          NAME,
+	             author_tag,
+	                price,
+	                  publish_company,
+	                    star_level,
+	                      time,
+	                        product.productcategories AS productCategories,
+	                          id,
+	                            brief
+
+          FROM
+            book
+               INNER JOIN product ON book.productid = product.productid WHERE BOOK.is_show = "00"
+          
+             <if test="productId != null">
+                AND product.productid=#{productId}
+             </if>
+                
+              <if test="autherName != null">
+                And book.author_tag=#{autherName}
+             </if>
+             
+              <if test="bookName != null">
+                AND book.name=#{bookName}
+             </if>
+             
+              <if test="publishCompany != null">
+                AND book.publish_company=#{publishCompany}
+             </if>
+             
+          
+
+     </select>
+     
+      <!-- 修改图书信息 -->
+			<update id="uppdateBookMetaByInfo" >
+			    update book b
+			        <set>
+			            <if test="autherName != null and autherName != ''">
+			                b.author_tag = #{autherName},
+			            </if>
+			            
+			            <if test="time != null and time != ''">
+			                b.time = #{time},
+			            </if>
+			             
+			            <if test="publishCompany != null and publishCompany != ''">
+			                b.publish_company = #{publishCompany},
+			            </if>
+			            <if test="brief != null and brief != ''">
+			                b.brief = #{brief},
+			            </if>
+			            <if test="name != null and name != ''">
+			                b.name = #{name},
+			            </if>
+			            <if test="price != null and price != ''">
+			                b.price = #{price}
+			            </if>
+
+			        </set>
+			     
+			     where id=#{id}
+			</update>
+			
+		<!-- 删除图书信息 -->
+			<delete id="bookMetaDeleteById">
+			update book set is_show = "01" where id=#{id}
+			</delete>
+			
+		<!-- 取得图书上架分类的id -->
+		
+		     <select id="getBookMetaProductId" resultType="java.lang.Integer">
+		     
+		          select productid FROM book where id=#{id}
+
+			 </select>
+		
+			
+			
+			
+		<!-- 新增图书信息 -->
+		    <insert id="addBookMetaByInfo" >
+		     insert into book_work_add(name,author_tag,price,publish_company,star_level,brief,publish_time,productid,is_audit,apply_time,apply_worker_id,model)
+		     
+		      values(#{name},#{autherName},#{price},#{publishCompany},
+		      #{starLevel},#{brief},#{publish_time},#{productid},#{is_audit},#{apply_time},#{apply_worker_id},#{model})
+		    </insert>
+		    
+		    
+		 <!-- 图书删除信息存入流程表中 -->
+		    <insert id="storeDeleteInfo" >
+		     insert into book_work_add(name,author_tag,price,publish_company,star_level,brief,publish_time,productid,is_audit,apply_time,apply_worker_id,model)
+		     
+		      values(#{name},#{authorTag},#{price},#{publishCompany},
+		      #{starLevel},#{brief},#{time},#{productid},#{is_audit},#{apply_time},#{apply_worker_id},#{model})
+		    </insert>
+		    
+		    
+		   <!-- 编辑图书信息 -->
+		    <insert id="addBookId" >
+		     insert into book_work_add(name,author_tag,price,publish_company,star_level,brief,publish_time,productid,is_audit,apply_time,apply_worker_id,model,bookid)
+		     
+		      values(#{name},#{autherName},#{price},#{publishCompany},
+		      #{starLevel},#{brief},#{publish_time},#{productid},#{is_audit},#{apply_time},#{apply_worker_id},#{model},#{bookid})
+		    </insert>
+		 
+		 
+		 
+		 
+		 
+		 
+</mapper>

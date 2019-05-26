@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cone.sunny.dao.BookAuditDao">
+     <!-- 查询需要审核的图书信息 -->
+     <select id="SearchAuditByWorkId" resultType="com.cone.sunny.pojo.BookAudit">
+					SELECT
+						a.workid,
+						a.`name`,
+						a.author_tag,
+						a.price,
+						a.publish_company,
+						a.star_level,
+						a.brief,
+						a.publish_time,
+						a.productid,
+					  w.`name` as worker
+					FROM
+						book_work_add a
+					LEFT JOIN worker w ON w.id = a.apply_worker_id
+					WHERE
+						a.is_audit = "00"
+					AND a.model=#{model}
+         
+             <if test="workid != null">
+                AND a.workid=#{workid}
+             </if>
+         
+         
+     </select>
+     
+     
+     <!-- 根据审核失败流程id查询申请信息  -->
+		     <select id="SearchFailAuditInfoByWorkId"  resultType="map">
+		         select b.author_tag, b.price,b.star_level,b.publish_company,b.publish_time,b.brief,f.audit_time,w.`name`,IF(b.audit_result = "00", '不通过', '通过')result
+					 FROM book_work_add b 
+					 INNER JOIN audit_his_fail f on f.workid = b.workid
+				INNER JOIN worker w ON w.id = f.worker_id
+				WHERE b.workid=#{workId}
+		     </select>
+		     
+		     
+	<!-- 根据审核成功流程id查询申请信息  -->
+		     <select id="SearchSuccessAuditInfoByWorkId"  resultType="map">
+		         select b.author_tag, b.price,b.star_level,b.publish_company,b.publish_time,b.brief,s.audit_time,w.`name`,IF(b.audit_result = "00", '不通过', '通过')result
+					 FROM book_work_add b 
+					 INNER JOIN audit_his_success s on s.workid = b.workid
+				INNER JOIN worker w ON w.id = s.worker_id
+				WHERE b.workid=#{workId}
+		     </select>
+     
+     
+     <!-- 查询当前用户的申请信息 -->
+          <select id="CheckUserApplyInfoByWorkId" resultType="com.cone.sunny.pojo.ApplyInfo">
+				SELECT b.workid, p.productcategories, b.audit_result, b.apply_time, b.is_audit, IF(b.is_audit = "00", '未审核','已审核') audit, i.model_cn_name FROM book_work_add b
+				   LEFT JOIN product p ON p.productid = b.productid
+				LEFT JOIN model_info i ON i.model = b.model WHERE b.apply_worker_id=#{id}
+		         
+		             <if test="applyTime != null">
+		                AND b.apply_time=#{applyTime}
+		             </if>
+		         
+		   </select>
+     
+     
+     
+     <!-- 查询审核人员信息 -->
+     <select id="SearchWorkerInfo" resultType="com.cone.sunny.pojo.Worker">
+         select id,name from worker
+     </select>
+     
+     <!-- 编辑图书信息时取得bookid -->
+     
+         <select id="GetBookId" resultType="java.lang.Integer">
+	         SELECT bookid FROM book_work_add where workid=#{workid}
+	     </select>
+     
+     
+     <!-- 通过流程号查询图书信息来源 -->
+          <select id="SearchBookMetaModel" resultType="string">
+	         SELECT model FROM book_work_add where workid=#{workId}
+	     </select>
+     
+     
+     <!-- 审核成功，书籍信息入库 -->
+     
+     		    <insert id="StoreBookMeta">
+				     insert into book(name,author_tag,price,publish_company,star_level,brief,time,productid,is_show)
+				      values(#{name},#{author_tag},#{price},#{publish_company},#{star_level},#{brief},#{time},#{productid},#{is_show})
+			    </insert>
+     
+     
+     <!-- 查询新增书籍id -->
+     <select id="SearchBookMetaId" resultType="java.lang.Integer">
+     
+     select book.id from book where book.name=#{name} and book.author_tag=#{author_tag} and book.price=#{price}
+     and book.publish_company=#{publish_company} and book.star_level=#{star_level} and book.brief=#{brief}
+     and book.time=#{time}
+     </select>
+     
+     
+     <!-- 审核成功信息记入流程表中(新增) -->
+     
+     		<insert id="AuditSuccess" >
+		     insert into audit_his_success(book_id,worker_id, audit_time, workid, model)
+		      values(#{book_id},#{worker_id},#{audit_time},#{workid},#{model})
+		    </insert>
+		    
+	  <!-- 审核成功信息记入流程表中(Excel导入) -->
+     
+     		<insert id="excelAuditSuccess" >
+		     insert into audit_his_success(book_id,worker_id, audit_time, workid, model)
+		      values(#{book_id},#{worker_id},#{audit_time},#{workid},#{excelModel})
+		    </insert>
+		    
+	 <!-- 图书删除审批成功(删除) -->
+	      	<insert id="AuditDeleteSuccess" >
+			     insert into audit_his_success(worker_id, audit_time, workid, model)
+			      values(#{worker_id},#{audit_time},#{workid},#{model})
+		    </insert>   
+		    
+	  <!-- 删除审核失败，恢复图书状态 -->
+	  		  <update id="RecoveryBookMeta">
+		         update book set is_show="00" where id=#{bookId}
+		      </update>
+		      
+	   <!-- 更新图书信息 -->
+	   	  	<update id="UpdateBookMetaInfoById">
+		         update book set name=#{name},author_tag=#{author_tag},price=#{price},
+		         publish_company=#{publish_company},star_level=#{star_level},brief=#{brief},
+		         time=#{publishtime} where id=#{bookId}
+		    </update>
+		      
+	  
+     
+     <!-- 审核失败 -->
+		    <insert id="AuditFail" >
+		     insert into audit_his_fail(worker_id, audit_time, workid)
+		      values(#{worker_id},#{audit_time},#{workid})
+		    </insert>
+		    
+		    
+	<!-- 更新审核状态 -->
+		      <update id="RefreshAuditState">
+		         update book_work_add set is_audit="01" where workid=#{workId}
+		      </update>
+		      
+	<!-- 更新审核成功标志位 -->
+	          <update id="SuccessChange">
+		         update book_work_add set audit_result="01" where workid=#{workId}
+		      </update>
+		      
+	<!-- 更新审核失败标志位 -->
+	          <update id="FailChange">
+		         update book_work_add set audit_result="00" where workid=#{workId}
+		      </update>
+		      
+	<!-- 从book表删除图书信息 -->
+	      <delete id="DeleteFromBookById">
+		      delete from book where id=#{bookId}
+		  </delete>
+	
+     
+     
+     
+</mapper>

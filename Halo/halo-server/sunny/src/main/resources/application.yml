@@ -1,0 +1,3 @@
+mybatis:
+    typeAliasesPackage: com.cone.sunny.pojo
+    mapperLocations: classpath:mapper/*.xml

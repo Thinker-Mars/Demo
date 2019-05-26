@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cone.sunny.dao.ChartInfoDao">
+     <!-- 查询图书类别 -->
+	     <select id="searchProductCategories" resultType="com.cone.sunny.pojo.bookCate">
+	         SELECT p.productcategories,COUNT(b.productid) count FROM book b
+				LEFT JOIN product p on p.productid = b.productid
+			 GROUP BY b.productid
+	     </select>
+     
+     <!-- 根据时间查询图书活跃度 -->
+	     <select id="getWeekData" resultType="com.cone.sunny.pojo.WeekData">
+				SELECT
+					IFNULL(sum(model = "01"), 0) addCount,
+					IFNULL(sum(model = "02"), 0) checkCount,
+					IFNULL(sum(model = "03"), 0) deleteCount,
+					IFNULL(sum(model = "04"), 0) excelCount
+				FROM
+					audit_his_success
+				WHERE
+					audit_time=#{searchTime}
+	     </select>
+</mapper>

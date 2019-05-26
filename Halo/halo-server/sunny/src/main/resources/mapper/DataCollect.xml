@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cone.sunny.dao.DataCollectDao">
+     <!-- 查询图书类别 -->
+     <select id="searchTask" resultType="com.cone.sunny.pojo.MetaCollect">
+			SELECT
+				p.productcategories taskName,
+				w.`name` workerName,
+				c.last_time lastTime,
+				c.run_time runTime,
+				c.count count,
+			IF(c.result = "01", '成功', '失败')result
+			
+			FROM
+				data_collect c
+			LEFT JOIN product p ON p.productid = c.task_id
+			LEFT JOIN worker w ON w.id = c.worker_id
+			<where>
+			 <if test="taskName != null">
+                c.task_id=#{taskName}
+             </if>
+             </where>
+
+     </select>
+     
+     
+     <!-- 根据任务名称返回执行路径地址 -->
+     
+	     	<select id="getTaskAddress" resultType="string">
+				SELECT
+					a.command address
+				FROM
+					product p
+				LEFT JOIN execute_address a ON a.task_id = p.productid
+				WHERE
+					p.productcategories=#{taskName}
+	
+			</select>
+			
+	  <!-- 根据任务名称返回id-->
+	  	     <select id="getTaskId" resultType="java.lang.Integer">
+	  	     
+					SELECT productid FROM product WHERE productcategories=#{taskName}
+	
+			</select>
+	  
+			
+			
+	  <!-- 查询当前数据量 -->
+	  
+	  	    <select id="getBookCount" resultType="java.lang.Integer">
+			     
+				SELECT COUNT(id)count FROM book
+	
+			</select>
+			
+	  <!-- 更新任务执行表数据 -->
+	  
+	  	   	<update id="executeTask">
+		         update data_collect set last_time=#{lastTime},run_time=#{runTime},
+		         count=#{count},worker_id=#{workerId},result=#{result} where task_id=#{taskId}
+		    </update>
+		    
+	   <!-- 采集任务遇到异常 -->
+	   
+	   	  	<update id="executeError">
+		         update data_collect set result="00" where task_id=#{taskId}
+		    </update>
+	   
+	   
+     
+      
+		 	 
+</mapper>
