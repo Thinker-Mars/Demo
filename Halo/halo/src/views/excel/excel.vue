@@ -30,28 +30,28 @@
      methods: {
          download: function() {
              var dataList=[];
-             this.$axios.post("apis/import/downloadExcel",{excelList:dataList,sign:"mould"},{responseType:'blob'})
-             .then((res) => {
-                    const content = res;
-                    const blob = new Blob([content],{type:"application/octet-stream"})
-                    const fileName = '图书新增信息.xlsx';
-                    if ('download' in document.createElement('a')) { // 非IE下载
-                    const elink = document.createElement('a');
-                    elink.download = fileName;
-                    elink.style.display = 'none';
+               this.$axios.post("/apis/import/downloadExcel", {excelList:dataList,sign:"mould"},{responseType:'blob'}).then((res) => {
+                      const content = res;
+                      const blob = new Blob([content.data],{type:"application/octet-stream"})
+                      const fileName = '图书新增信息.xlsx';
+                      console.log(content);
+                      if ('download' in document.createElement('a')) { // 非IE下载
+                      const elink = document.createElement('a');
+                      elink.download = fileName;
+                      elink.style.display = 'none';
 
-                    //window.open(URL.createObjectURL(blob));
-                    var uu = URL.createObjectURL(blob);
-                    elink.href = URL.createObjectURL(blob);
-                    elink.target = "_blank"
-                    document.body.appendChild(elink);
-                    elink.click();
-                    URL.revokeObjectURL(elink.href); // 释放URL 对象
-                    document.body.removeChild(elink);
-                } else { // IE10+下载
-                    navigator.msSaveBlob(blob, fileName);
-                }
-             })
+                      //window.open(URL.createObjectURL(blob));
+                      var uu = URL.createObjectURL(blob);
+                      elink.href = URL.createObjectURL(blob);
+                      elink.target = "_blank"
+                      document.body.appendChild(elink);
+                      elink.click();
+                      URL.revokeObjectURL(elink.href); // 释放URL 对象
+                      document.body.removeChild(elink);
+                    } else { // IE10+下载
+                      navigator.msSaveBlob(blob, fileName);
+                    }
+                });
 
          }
 
