@@ -1,0 +1,21 @@
+从git仓库里拉取想要的文件方法：
+
+1、进入本地目录，创建一个新的文件夹
+cd E:/
+mkdir static
+
+2、初始化git
+cd static
+git init
+
+3、远程链接仓库（后面的仓库地址为要拉取的仓库地址）
+git remote add -f origin https://github.com/Thinker-Mars/Demo.git
+
+4、开启sparse checkout模式
+git config core.sparsecheckout true
+
+5、选择要拉取的文件（.git/info/sparse-checkout为拉取后的本地目录）
+echo redis >> .git/info/sparse-checkout
+
+6、拉取
+git pull origin master
