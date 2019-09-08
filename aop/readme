@@ -1,0 +1,69 @@
+execution切点函数
+1、execution函数用于匹配方法执行的连接点，语法为：
+
+  execution(方法修饰符(可选)  返回类型  方法名  参数  异常模式(可选)) 
+  
+  其中，参数部分允许使用通配符：
+    *  匹配任意字符，但只能匹配一个元素
+    .. 匹配任意字符，可以匹配任意多个元素，表示类时，必须和*联合使用
+    +  必须跟在类名后面，BaseClass+，表示BaseClass类本身和继承或扩展指定BaseClass类的所有类
+    
+    
+2、注解说明
+2.1 @Aspect
+把当前类标识为一个切面供容器读取
+2.2 @Before
+标识一个前置增强方法
+2.3 @AfterReturning
+后置增强，方法正常退出时执行
+2.4 @AfterThrowing
+异常抛出增强
+2.5 @After
+final增强，不管是抛出异常或者正常退出都会执行
+2.6 @Around
+环绕增强
+2.7 @DeclareParents
+引介增强
+
+    
+3、示例（以@Before这个advice为例）：
+3.1 这里是在xml文件中配置了使用aop的class，所以没有指定具体的类，如果使用注解方式的话，需要指出类名
+    <aop:aspectj-autoproxy />//使用aop注解
+    <bean id="horseman" class="examples.chap03.Horseman" />//指出了具体类
+    <bean id="swordman" class="examples.chap03.Swordman" />
+    <bean class="examples.chap03.StorageAdvisor" />//切面类，声明了pointcut和advice
+
+@Before("execution(* chop(..))")
+意为：
+方法修饰符  无
+返回类型    *匹配任意数量字符，表示返回类型不限
+方法名      chop表示匹配名称为chop的方法
+参数        (..)表示匹配任意数量和类型的输入参数
+异常模式    不限
+
+3.2 void chop(String,int)
+匹配目标类任意修饰符方法、返回void、方法名chop、带有一个String和一个int型参数的方法
+
+3.3 public void chop(*)
+匹配目标类public修饰、返回void、方法名chop、带有一个任意类型参数的方法
+
+3.4 public String *o*(..)
+匹配目标类public修饰、返回String类型、方法名中带有一个o字符、带有任意数量任意类型参数的方法
+
+3.5 public void *o*(String,..)
+匹配目标类public修饰、返回void、方法名中带有一个o字符、带有任意数量任意类型参数，但第一个参数必须有且为String型的方法
+
+以下为指定类的情况
+3.6 public void com.cone.aop.controller.AopController.*(..)
+匹配AopController的public修饰、返回void、不限方法名、带有任意数量任意类型参数的方法
+
+3.7 public void com.cone.aop.controller.AopController.*man.*(..)
+匹配AopController下以man结尾的类中public修饰、返回void、不限方法名、带有任意数量任意类型参数的方法
+
+以下为指定包的情况
+3.8 public void com.cone.aop.controller.*.chop(..)
+匹配com.cone.aop.controller包下所有类中public修饰、返回void、方法名chop、带有任意数量任意类型参数的方法
+
+3.9 public void com.cone.aop..*.chop(..)
+匹配com.cone.aop包下和所有子包中的类中public修饰、返回void、方法名chop、带有任意数量任意类型参数的方法
+
