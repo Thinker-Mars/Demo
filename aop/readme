@@ -32,6 +32,11 @@ final增强，不管是抛出异常或者正常退出都会执行
     <bean id="horseman" class="examples.chap03.Horseman" />//指出了具体类
     <bean id="swordman" class="examples.chap03.Swordman" />
     <bean class="examples.chap03.StorageAdvisor" />//切面类，声明了pointcut和advice
+    
+在代码中可通过如下方式实例化对象：
+ApplicationContext context = new ClassPathXmlApplicationContext("examples/chap03/applicationContext.xml");
+Horseman hm = (Horseman)context.getBean("horseman");
+Swordman sm = (Swordman)context.getBean("swordman");
 
 @Before("execution(* chop(..))")
 意为：
@@ -66,4 +71,5 @@ final增强，不管是抛出异常或者正常退出都会执行
 
 3.9 public void com.cone.aop..*.chop(..)
 匹配com.cone.aop包下和所有子包中的类中public修饰、返回void、方法名chop、带有任意数量任意类型参数的方法
+
 
