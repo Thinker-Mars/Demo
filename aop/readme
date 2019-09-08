@@ -62,7 +62,7 @@ Swordman sm = (Swordman)context.getBean("swordman");
 3.6 public void com.cone.aop.controller.AopController.*(..)
 匹配AopController的public修饰、返回void、不限方法名、带有任意数量任意类型参数的方法
 
-3.7 public void com.cone.aop.controller.AopController.*man.*(..)
+3.7 public void com.cone.aop.controller.AopController.*man(..)
 匹配AopController下以man结尾的类中public修饰、返回void、不限方法名、带有任意数量任意类型参数的方法
 
 以下为指定包的情况
