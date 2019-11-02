@@ -4,12 +4,23 @@ import router from './router'
 import store from './store'
 import iView from 'iview'
 import http from './request/http'
-//import {get, post} from './request/http'
 import 'iview/dist/styles/iview.css'
 
 Vue.use(iView);
 
 Vue.config.productionTip = false
+
+/**
+ * 加载进度条
+ */
+router.beforeEach((to, from, next) => {
+  iView.LoadingBar.start();
+  next();
+});
+
+router.afterEach(route => {
+  iView.LoadingBar.finish();
+});
 
 
 /**

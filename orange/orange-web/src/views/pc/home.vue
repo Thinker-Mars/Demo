@@ -2,31 +2,32 @@
     <div class="layout">
         <Layout>
             <Header>
-                <Menu mode="horizontal" theme="dark" active-name="orange">
+                <Menu mode="horizontal" theme="dark" active-name="orange" @on-select="m => {headerMenuSelect(m)}">
                     <div class="layout-logo"></div>
                     <div class="layout-nav">
                         <MenuItem name="1">
                             <Icon type="ios-navigate"></Icon>
-                            Item 1
+                            连接
                         </MenuItem>
                         <MenuItem name="2">
                             <Icon type="ios-keypad"></Icon>
-                            Item 2
+                            占位
                         </MenuItem>
                         <MenuItem name="3">
                             <Icon type="ios-analytics"></Icon>
-                            Item 3
+                            占位
                         </MenuItem>
                         <MenuItem name="4">
-                            <Icon type="ios-paper"></Icon>
-                            Item 4
+                            <Icon type="md-power" />
+                            注销
                         </MenuItem>
+                        
                     </div>
                 </Menu>
             </Header>
             <Layout>
-                <Sider hide-trigger :style="{background: '#fff'}">
-                    <Menu active-name="1-2" theme="light" width="auto" @on-select="m => {menuSelect(m)}">
+                <Sider hide-trigger :style="{background: '#fff', height: '83vh', overflow: 'auto'}">
+                    <Menu active-name="1-2" theme="light" width="auto" @on-select="m => {siderMenuSelect(m)}">
                         <Submenu name="0">
                             <template slot="title">
                                 <Icon type="ios-navigate"></Icon>
@@ -80,10 +81,30 @@
              * :style="{padding: '24px', minHeight: '280px', background: '#fff'}"
              * 根据选中的标签进行路由
              */
-            menuSelect(m) {
+            siderMenuSelect(m) {
                 
                 if (1 == m) {
                     this.$router.push({path: '/home/news'});
+                }
+            },
+            headerMenuSelect(m) {
+                /**
+                 * 注销操作
+                 */
+                if (4 == m) {
+                    this.$Modal.confirm({
+                        title: '提示',
+                        content: '<p>确认退出？</p>',
+                        onOk: () => {
+                            this.$store.dispatch('clearToken');
+                            this.$store.dispatch('changeLoginFlag', false);
+                            this.$router.push({path: '/login'});
+                        },
+                        onCancel: () => {
+                            
+                        }
+                    });
+
                 }
             }
         }
@@ -98,9 +119,6 @@
     position: relative;
     border-radius: 4px;
     overflow: auto;
-    
-    
-    
 }
 .layout-logo{
     width: 100px;
@@ -119,6 +137,7 @@
 }
 .layout-footer-center{
     text-align: center;
+    padding: 20px 50px;
 }
 .Sider{
  display: block;

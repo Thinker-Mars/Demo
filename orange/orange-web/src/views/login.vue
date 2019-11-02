@@ -18,7 +18,7 @@
                                     </i-input>
                                 </Form-item>
                                 <Form-item prop="password">
-                                    <i-input type="password" v-model="loginForm.password" placeholder="Password">
+                                    <i-input type="password" v-model="loginForm.password" placeholder="Password" @on-enter="enterToSubmit('loginForm')">
                                         <Icon type="ios-locked-outline" slot="prepend"></Icon>
                                     </i-input>
                                 </Form-item>
@@ -53,6 +53,9 @@
             }
         },
         methods: {
+            /**
+             * 点击按钮登录
+             */
             handleSubmit(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
@@ -71,6 +74,12 @@
                         return;
                     }
                 })
+            },
+            /**
+             * 按回车登录
+             */
+            enterToSubmit(formName) {
+                this.handleSubmit(formName);
             }
         }
     }

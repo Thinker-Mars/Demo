@@ -138,14 +138,17 @@ export default {
      * @param {Object} params 请求参数
      */
     get(url, params) {
+        
         return new Promise((resolve, reject) => {
             axios.get(url, {
                 params: params
             })
             .then(res => {
+                
                 resolve(res.data);
             })
             .catch(error => {
+                
                 reject(error);
             })
         });
@@ -157,12 +160,15 @@ export default {
      * @param {*} params 
      */
     post(url, params) {
+        
         return new Promise((resolve, reject) => {
             axios.post(url, QS.stringify(params))
             .then(res => {
+                
                 resolve(res.data);
             })
             .catch(error => {
+                
                 reject(error);
             })
         });
