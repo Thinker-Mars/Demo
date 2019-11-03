@@ -5,19 +5,24 @@
                 <Menu mode="horizontal" theme="dark" active-name="orange" @on-select="m => {headerMenuSelect(m)}">
                     <div class="layout-logo"></div>
                     <div class="layout-nav">
+                        
                         <MenuItem name="1">
                             <Icon type="ios-navigate"></Icon>
                             连接
                         </MenuItem>
+
                         <MenuItem name="2">
-                            <Icon type="ios-keypad"></Icon>
-                            占位
+                            <Icon type="md-notifications" />
+                            <Badge :count=this.msgCount type="success"></Badge>
+                            
                         </MenuItem>
+
                         <MenuItem name="3">
                             <Icon type="ios-analytics"></Icon>
                             占位
                         </MenuItem>
-                        <MenuItem name="4">
+
+                        <MenuItem name="4"> 
                             <Icon type="md-power" />
                             注销
                         </MenuItem>
@@ -76,6 +81,12 @@
 
 <script>
     export default {
+        data() {
+            return {
+                msgCount: 1
+            }
+
+        },
         methods: {
             /**
              * :style="{padding: '24px', minHeight: '280px', background: '#fff'}"
@@ -145,7 +156,13 @@
  left: 0;
  top: 70px;
  bottom: 0;
-
  overflow-y: scroll;
 }
+/* .demo-badge{
+    width: 42px;
+    height: 42px;
+    background: #eee;
+    border-radius: 6px;
+    display: inline-block;
+} */
 </style>
