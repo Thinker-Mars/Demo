@@ -7,14 +7,13 @@
                     <div class="layout-nav">
                         
                         <MenuItem name="1">
-                            <Icon type="ios-navigate"></Icon>
-                            连接
+                            <Icon type="md-build" />
+                            配置
                         </MenuItem>
 
                         <MenuItem name="2">
                             <Icon type="md-notifications" />
-                            <Badge :count=this.msgCount type="success"></Badge>
-                            
+                            <Badge :count=msgCount type="success"></Badge>
                         </MenuItem>
 
                         <MenuItem name="3">
@@ -45,7 +44,7 @@
                         <Submenu name="2">
                             <template slot="title">
                                 <Icon type="ios-keypad"></Icon>
-                                Item 2
+
                             </template>
                             <MenuItem name="2-1">Option 1</MenuItem>
                             <MenuItem name="2-2">Option 2</MenuItem>
@@ -74,22 +73,27 @@
             </Layout>
             <Footer class="layout-footer-center">2018-2019 &copy; Cone</Footer>
         </Layout>
-        
+        <!-- 配置页 -->
+        <config ref="config"></config>
     </div>
+    
 </template>
 
 
 <script>
+import config from './header/config';
     export default {
         data() {
             return {
-                msgCount: 1
+                msgCount: 2
             }
 
         },
+        components: {
+            'config': config
+        },
         methods: {
             /**
-             * :style="{padding: '24px', minHeight: '280px', background: '#fff'}"
              * 根据选中的标签进行路由
              */
             siderMenuSelect(m) {
@@ -115,7 +119,11 @@
                             
                         }
                     });
-
+                } else if (1 == m) {
+                    /** 
+                     * 打开配置页面
+                    */
+                    this.$refs.config.open();
                 }
             }
         }
