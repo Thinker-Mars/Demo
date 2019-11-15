@@ -42,6 +42,9 @@ def entrance(img_src, screen_src):
 def find(image, screen, timeout=FIND_TIMEOUT, interval=0.5):
     """
     根据传入的图片，返回合适的坐标
+    在规定时间内未找到则抛出异常，否则一旦找到就退出
+    默认可信度为0.8，只要得到的结果可信度大于（等于）0.8，就返回坐标，否则返回None
+    所以下面的逻辑是只要得到的坐标不为None，就停止查找，直接返回
     :param image:
     :param screen:
     :param timeout: 时间限制（默认20s）
@@ -59,7 +62,6 @@ def find(image, screen, timeout=FIND_TIMEOUT, interval=0.5):
                 break
             else:
                 time.sleep(interval)
-
 
 
 class Template(object):
