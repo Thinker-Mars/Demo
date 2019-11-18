@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cone.orange.dao.config.ConfigDao">
+    <!--查询数据字典配置信息-->
+    <select id="getDictConfigByTypeName" parameterType="java.lang.String" resultType="com.cone.orange.model.config.DictConfig">
+
+          SELECT
+              dc.CONFIG_ID configId,
+              dc.CONFIG_TYPE_ID configTypeId,
+              dc.CONFIG_VALUE configValue
+          FROM
+	          dict_config dc
+          INNER JOIN dict_config_type dct ON dct.CONFIG_TYPE_ENAME=#{typeName}
+
+     </select>
+
+
+</mapper>
