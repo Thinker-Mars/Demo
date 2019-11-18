@@ -123,9 +123,11 @@ import config from './header/config';
                     /** 
                      * 打开配置页面
                     */
-                    this.$refs.config.open();
+                   this.$refs.config.open();
+                    
                 }
             }
+
         }
         
     }
