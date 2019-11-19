@@ -138,7 +138,8 @@ export default {
      * @param {Object} params 请求参数
      */
     get(url, params) {
-        
+        // debugger;
+        // console.log(params)
         return new Promise((resolve, reject) => {
             axios.get(url, {
                 params: params

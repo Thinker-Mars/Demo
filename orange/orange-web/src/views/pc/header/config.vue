@@ -41,7 +41,7 @@
                 <Row :gutter="32">
                     <Col span="12">
                         <FormItem label="Protocol" label-position="top">
-                            <Select v-model="configForm.protocol" clearable filterable placeholder="选择协议" @on-open-change="searchProtocol()">
+                            <Select v-model="configForm.protocol" clearable filterable placeholder="选择协议">
                                 <Option v-for="item in serverProtocolList" :value="item.configId" :key="item.configId">{{item.configValue}}</Option>
                             </Select>
                         </FormItem>
@@ -152,10 +152,20 @@
         },
         methods: {
             /**
-             * 打开配置页
+             * 打开配置页，然后查询协议
              */
             open() {
                 this.openFlag = true;
+                //先看缓存里有没有数据
+                this.$nextTick(() => {
+                    if (this.storage.get('server_protocol')) {
+                        this.serverProtocolList = this.storage.get('server_protocol');
+                        return;
+                    } else {
+                        this.searchProtocol();
+                    }
+                    
+                })
             },
             /**
              * 关闭配置页
@@ -173,6 +183,8 @@
                 this.http.get('/config/dict', protocolData)
                 .then((res) => {
                     this.serverProtocolList = res;
+                    //缓存协议数据
+                    this.storage.set('server_protocol', res)
                 })
             }
         }
