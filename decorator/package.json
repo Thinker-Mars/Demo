@@ -1,0 +1,19 @@
+{
+  "name": "decorator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx babel src --out-dir dist && node ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "Cone",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/plugin-proposal-decorators": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "core-js": "^3.18.2"
+  }
+}
